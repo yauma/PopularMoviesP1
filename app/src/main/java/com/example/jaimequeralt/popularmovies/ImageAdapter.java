@@ -10,6 +10,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 
 /**
@@ -18,27 +20,16 @@ import static android.widget.ImageView.ScaleType.CENTER_CROP;
 public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    };
+    private ArrayList<String> listPostersPaths;
 
-    public ImageAdapter(Context c) {
+    public ImageAdapter(Context c, ArrayList<String> listPostersPaths) {
         mContext = c;
+        this.listPostersPaths = listPostersPaths;
     }
 
     @Override
     public int getCount() {
-        return mThumbIds.length;
+        return listPostersPaths.size();
     }
 
     @Override
@@ -56,15 +47,14 @@ public class ImageAdapter extends BaseAdapter {
         SquaredImageView view = (SquaredImageView) convertView;
         if (view == null) {
             view = new SquaredImageView(mContext);
-            view.setScaleType(CENTER_CROP);
+            //view.setScaleType(CENTER_CROP);
 
         }
-
+        String url = "http://image.tmdb.org/t/p/w342/"+listPostersPaths.get(position);
         // Trigger the download of the URL asynchronously into the image view.
         Picasso.with(mContext)
-                .load(mThumbIds[position])
+                .load(url)
                 .resize(300, 300)
-                .centerCrop()
                 .into(view);
 
         return view;
