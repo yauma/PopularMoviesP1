@@ -54,7 +54,6 @@ public class ImageAdapter extends BaseAdapter {
         // Trigger the download of the URL asynchronously into the image view.
         Picasso.with(mContext)
                 .load(url)
-                .resize(300, 300)
                 .into(view);
 
         return view;

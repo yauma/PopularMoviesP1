@@ -1,6 +1,7 @@
 package com.example.jaimequeralt.popularmovies;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -12,22 +13,21 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -44,6 +44,9 @@ public class MainActivityFragment extends Fragment {
     private String filter = "popular";
     private JsonObjectRequest jsObjRequest;
     private ActionBar mActionBar;
+    private Movie movie;
+    private ArrayList<Movie> listMovies;
+
 
     public MainActivityFragment() {
     }
@@ -89,7 +92,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_gridview, container, false);
 
@@ -101,10 +104,15 @@ public class MainActivityFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Toast.makeText(getActivity(), "Image" + position,
-                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(),DetailMovieActivity.class);
+                intent.putExtra("Movie", listMovies.get(position));
+                startActivity(intent);
             }
         });
+
+
+
+
         return rootView;
     }
 
@@ -142,13 +150,23 @@ public class MainActivityFragment extends Fragment {
     }
 
     private ArrayList<String> parseJsonObject(JSONObject response) {
+        movie = new Movie();
         mListImages = new ArrayList<String>();
+        listMovies = new ArrayList<>();
         try {
             JSONArray results = response.getJSONArray("results");
             for (int i = 0; i < results.length(); i++) {
                 JSONObject posterObj = results.getJSONObject(i);
+                String originalTitle = posterObj.getString("original_title");
                 String posterPath = posterObj.getString("poster_path");
+                String overview = posterObj.getString("overview");
+                String releaseDate = posterObj.getString("release_date");
+                int average = posterObj.getInt("vote_average");
+                movie = new Movie(originalTitle,posterPath,overview,releaseDate,average);
+                listMovies.add(movie);
                 mListImages.add(posterPath);
+
+
             }
 
         } catch (JSONException e) {
