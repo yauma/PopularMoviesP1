@@ -37,12 +37,13 @@ public class MainActivityFragment extends Fragment {
     private GridView gridview;
     private ImageAdapter imageAdapter;
     private ArrayList<String> mListImages;
-    private final String API_KEY = "";
+    private final String API_KEY = "9bc3a7bc8d59c59f5ce6afa05f9a3d60";
     private String filter = "popular";
     private JsonObjectRequest jsObjRequest;
     private ActionBar mActionBar;
     private Movie movie;
     private ArrayList<Movie> listMovies;
+    private String url;
 
 
     public MainActivityFragment() {
@@ -72,15 +73,18 @@ public class MainActivityFragment extends Fragment {
         if (id == R.id.most_polular) {
             if (filter.equals("top_rated")) {
                 filter = "popular";
+                url = buildUrl(filter);
+                loadGridViewFromAPI(url);
                 mActionBar.setTitle("Most Popular Movies");
-                loadGridViewFromAPI();
+
             }
         }
         if (id == R.id.top_rated) {
             if (filter.equals("popular")) {
                 filter = "top_rated";
+                url = buildUrl(filter);
+                loadGridViewFromAPI(url);
                 mActionBar.setTitle("Top Rated Movies");
-                loadGridViewFromAPI();
             }
         }
 
@@ -96,8 +100,8 @@ public class MainActivityFragment extends Fragment {
 
         gridview = (GridView) rootView.findViewById(R.id.gridview);
 
-        loadGridViewFromAPI();
-
+        url = buildUrl(filter);
+        loadGridViewFromAPI(url);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -112,16 +116,8 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    private void loadGridViewFromAPI() {
-        final String POPULAR_MOVIES_BASE_URL =
-                "http://api.themoviedb.org/3/movie/" + filter + "?";
-        final String API_KEY_PARAM = "api_key";
+    private void loadGridViewFromAPI(String url) {
 
-        Uri builtUri = Uri.parse(POPULAR_MOVIES_BASE_URL).buildUpon()
-                .appendQueryParameter(API_KEY_PARAM, API_KEY)
-                .build();
-
-        String url = builtUri.toString();
 
         jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -142,6 +138,18 @@ public class MainActivityFragment extends Fragment {
 
         // Access the RequestQueue through your singleton class.
         MySingleton.getInstance(getActivity()).addToRequestQueue(jsObjRequest);
+    }
+
+    private String buildUrl(String filter) {
+        final String POPULAR_MOVIES_BASE_URL =
+                "http://api.themoviedb.org/3/movie/" + filter + "?";
+        final String API_KEY_PARAM = "api_key";
+
+        Uri builtUri = Uri.parse(POPULAR_MOVIES_BASE_URL).buildUpon()
+                .appendQueryParameter(API_KEY_PARAM, API_KEY)
+                .build();
+
+        return builtUri.toString();
     }
 
     private ArrayList<String> parseJsonObject(JSONObject response) {
