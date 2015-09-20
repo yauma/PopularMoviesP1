@@ -2,7 +2,9 @@ package com.example.jaimequeralt.popularmovies;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -47,12 +49,12 @@ public class DetailMovieActivityFragment extends Fragment {
         imageViewPoster = (ImageView) rootview.findViewById(R.id.imageViewPoster);
         ratingBar = (RatingBar) rootview.findViewById(R.id.ratingBar);
 
+
         textViewTitle.setText(movie.getTitle());
         textViewDate.setText(movie.getReleaseDate());
         textViewOverview.setText(movie.getOverview());
-        textViewRating.setText( String.valueOf(movie.getRating()));
-
-        ratingBar.setRating(movie.getRating());
+        textViewRating.setText( String.valueOf(movie.getRating())+"/10");
+        ratingBar.setRating(movie.getRating()/(10/ratingBar.getNumStars()));
 
         String url = "http://image.tmdb.org/t/p/w342/" + movie.getPoster_path();
 
@@ -62,4 +64,6 @@ public class DetailMovieActivityFragment extends Fragment {
 
         return rootview;
     }
+
+
 }

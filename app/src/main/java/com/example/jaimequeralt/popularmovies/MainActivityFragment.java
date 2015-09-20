@@ -13,11 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -55,7 +52,6 @@ public class MainActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setTitle("Most Popular Movies");
     }
@@ -94,7 +90,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_gridview, container, false);
+
 
         gridview = (GridView) rootView.findViewById(R.id.gridview);
 
@@ -104,13 +102,11 @@ public class MainActivityFragment extends Fragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent intent = new Intent(getActivity(),DetailMovieActivity.class);
+                Intent intent = new Intent(getActivity(), DetailMovieActivity.class);
                 intent.putExtra("Movie", listMovies.get(position));
                 startActivity(intent);
             }
         });
-
-
 
 
         return rootView;
@@ -140,7 +136,6 @@ public class MainActivityFragment extends Fragment {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
 
                     }
                 });
@@ -151,7 +146,7 @@ public class MainActivityFragment extends Fragment {
 
     private ArrayList<String> parseJsonObject(JSONObject response) {
         movie = new Movie();
-        mListImages = new ArrayList<String>();
+        mListImages = new ArrayList<>();
         listMovies = new ArrayList<>();
         try {
             JSONArray results = response.getJSONArray("results");
@@ -161,11 +156,10 @@ public class MainActivityFragment extends Fragment {
                 String posterPath = posterObj.getString("poster_path");
                 String overview = posterObj.getString("overview");
                 String releaseDate = posterObj.getString("release_date");
-                int average = posterObj.getInt("vote_average");
-                movie = new Movie(originalTitle,posterPath,overview,releaseDate,average);
+                float average = Float.parseFloat(posterObj.getString("vote_average"));
+                movie = new Movie(originalTitle, posterPath, overview, releaseDate, average);
                 listMovies.add(movie);
                 mListImages.add(posterPath);
-
 
             }
 
@@ -175,4 +169,12 @@ public class MainActivityFragment extends Fragment {
         return mListImages;
     }
 
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (jsObjRequest != null) {
+            jsObjRequest.cancel();
+        }
+    }
 }

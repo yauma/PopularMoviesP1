@@ -9,13 +9,13 @@ import java.util.Date;
 public class Movie implements Serializable{
 
     private String title, poster_path, overview, releaseDate;
-    private int rating;
+    private float rating;
 
     public Movie() {
 
     }
 
-    public Movie(String title, String poster_path, String overview, String releaseDate, int rating) {
+    public Movie(String title, String poster_path, String overview, String releaseDate, float rating) {
         this.title = title;
         this.poster_path = poster_path;
         this.overview = overview;
@@ -55,7 +55,7 @@ public class Movie implements Serializable{
         this.releaseDate = releaseDate;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 

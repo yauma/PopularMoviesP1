@@ -47,7 +47,6 @@ public class ImageAdapter extends BaseAdapter {
         SquaredImageView view = (SquaredImageView) convertView;
         if (view == null) {
             view = new SquaredImageView(mContext);
-            //view.setScaleType(CENTER_CROP);
 
         }
         String url = "http://image.tmdb.org/t/p/w342/"+listPostersPaths.get(position);
