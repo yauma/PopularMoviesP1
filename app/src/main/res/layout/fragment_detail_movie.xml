@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/scrollView"
-        android:background="@android:color/darker_gray">
+        android:background="@android:color/background_light">
 
         <LinearLayout
             android:orientation="vertical"
