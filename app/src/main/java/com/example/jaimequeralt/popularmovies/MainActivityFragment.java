@@ -3,6 +3,7 @@ package com.example.jaimequeralt.popularmovies;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -37,13 +38,14 @@ public class MainActivityFragment extends Fragment {
     private GridView gridview;
     private ImageAdapter imageAdapter;
     private ArrayList<String> mListImages;
-    private final String API_KEY = "";
+    private final String API_KEY = "9bc3a7bc8d59c59f5ce6afa05f9a3d60";
     private String filter = "popular";
     private JsonObjectRequest jsObjRequest;
     private ActionBar mActionBar;
     private Movie movie;
     private ArrayList<Movie> listMovies;
     private String url;
+    private int itemPosition = 0;
 
 
     public MainActivityFragment() {
@@ -52,6 +54,11 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            mListImages = (ArrayList<String>) savedInstanceState.get("listImages");
+            listMovies = (ArrayList<Movie>) savedInstanceState.get("listMovies");
+            itemPosition = savedInstanceState.getInt("itemPosition");
+        }
         setHasOptionsMenu(true);
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setTitle("Most Popular Movies");
@@ -100,8 +107,15 @@ public class MainActivityFragment extends Fragment {
 
         gridview = (GridView) rootView.findViewById(R.id.gridview);
 
-        url = buildUrl(filter);
-        loadGridViewFromAPI(url);
+        if(mListImages != null){
+            imageAdapter = new ImageAdapter(getActivity(), mListImages);
+            gridview.setAdapter(imageAdapter);
+            gridview.setSelection(itemPosition);
+        }
+        else {
+            url = buildUrl(filter);
+            loadGridViewFromAPI(url);
+        }
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -176,7 +190,14 @@ public class MainActivityFragment extends Fragment {
         }
         return mListImages;
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("listImages", mListImages);
+        outState.putParcelableArrayList("listMovies",listMovies);
+        itemPosition = gridview.getFirstVisiblePosition() ;
+        outState.putInt("itemPosition",itemPosition);
+    }
 
     @Override
     public void onStop() {

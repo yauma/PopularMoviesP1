@@ -44,11 +44,11 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SquaredImageView view = (SquaredImageView) convertView;
+        ImageView view = (ImageView) convertView;
         if (view == null) {
-            view = new SquaredImageView(mContext);
-
+            view = new ImageView(mContext);
         }
+        view.setAdjustViewBounds(true);
         String url = "http://image.tmdb.org/t/p/w342/"+listPostersPaths.get(position);
         // Trigger the download of the URL asynchronously into the image view.
         Picasso.with(mContext)
@@ -59,22 +59,4 @@ public class ImageAdapter extends BaseAdapter {
     }
 }
 
-/**
- * An image view which always remains square with respect to its width.
- */
-final class SquaredImageView extends ImageView {
-    public SquaredImageView(Context context) {
-        super(context);
-    }
-
-    public SquaredImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth());
-    }
-}
 

@@ -1,12 +1,15 @@
 package com.example.jaimequeralt.popularmovies;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by jaimequeralt on 9/15/15.
  */
-public class Movie implements Serializable{
+public class Movie implements Parcelable {
 
     private String title, poster_path, overview, releaseDate;
     private float rating;
@@ -21,6 +24,10 @@ public class Movie implements Serializable{
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.rating = rating;
+    }
+
+    public Movie(Parcel in) {
+        readFromParcel(in);
     }
 
     public String getTitle() {
@@ -62,4 +69,37 @@ public class Movie implements Serializable{
     public void setRating(int rating) {
         this.rating = rating;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(poster_path);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeFloat(rating);
+    }
+
+    private void readFromParcel(Parcel in) {
+        title = in.readString();
+        poster_path = in.readString();
+        overview = in.readString();
+        releaseDate = in.readString();
+        rating = in.readFloat();
+    }
+
+    public static final Parcelable.Creator CREATOR =
+            new Parcelable.Creator() {
+                public Movie createFromParcel(Parcel in) {
+                    return new Movie(in);
+                }
+
+                public Movie[] newArray(int size) {
+                    return new Movie[size];
+                }
+            };
 }

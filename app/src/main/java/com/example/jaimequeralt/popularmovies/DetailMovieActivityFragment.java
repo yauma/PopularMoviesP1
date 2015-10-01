@@ -1,5 +1,6 @@
 package com.example.jaimequeralt.popularmovies;
 
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -31,9 +32,9 @@ public class DetailMovieActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle params = getActivity().getIntent().getExtras();
-        Object objectMovie = params.getSerializable("Movie");
-        movie = (Movie) objectMovie;
+        Object ObjectMovie = getActivity().getIntent().getExtras().getParcelable("Movie");
+        movie = (Movie) ObjectMovie;
+
     }
 
     @Override
